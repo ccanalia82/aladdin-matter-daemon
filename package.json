@@ -9,6 +9,9 @@
   "author": "Chris",
   "license": "MIT",
   "type": "commonjs",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "dependencies": {
     "@matter/main": "^0.15.4",
     "@matter/nodejs": "^0.16.0",
