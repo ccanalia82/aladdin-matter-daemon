@@ -1,1 +1,27 @@
+{
+  "name": "Garage Door",
+  "batteryLowLevel": 15,
+  "doorStatusStationaryCacheTtl": 15,
+  "doorStatusTransitioningCacheTtl": 5,
+  "doorStatusPollInterval": 15000,
+  "logApiResponses": false,
+  "logDoorStateChanges": true,
+  "showShared": false,
 
+  "doors": [
+    {
+      "name": "Main Garage Door",
+      "deviceNumber": 0,
+      "garageNumber": 1
+    }
+  ],
+
+  "matter": {
+    "nodeId": "aladdin-garage-node",
+    "port": 5580,
+    "passcode": 20202021,
+    "discriminator": 3840,
+    "vendorId": 65521,
+    "productId": 32769
+  }
+}
