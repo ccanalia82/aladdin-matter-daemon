@@ -1,1 +1,17 @@
-
+{
+  "name": "aladdin-matter-daemon",
+  "version": "1.0.0",
+  "description": "Expose Genie Aladdin Connect garage door as a Matter device using Matter.js",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "node src/main.js"
+  },
+  "author": "Chris",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "@matter/main": "^0.15.4",
+    "@matter/nodejs": "^0.16.0",
+    "node-aladdin-connect-garage-door": "^1.0.0"
+  }
+}
