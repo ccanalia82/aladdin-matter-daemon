@@ -286,6 +286,18 @@ node .\src\main.js
 
 ---
 
+### 🔐 Security / dependency notes
+
+Previous versions of this daemon depended on `node-aladdin-connect-garage-door`, which in turn used deprecated HTTP libraries (`request`, `request-promise-native`, `tough-cookie`, `form-data`).
+
+This version removes that dependency entirely:
+
+- All Genie Aladdin Connect communication is handled locally in `src/genieApi.js` using Node 20’s built-in `fetch()`.
+- `npm audit` no longer reports vulnerabilities coming from the old Genie client.
+- Only the Matter.js libraries remain as external runtime dependencies.
+
+If Genie changes their cloud API, only `src/genieApi.js` needs to be updated.
+
 ## 📄 License
 
 MIT License © 2025 Chris Canalia
