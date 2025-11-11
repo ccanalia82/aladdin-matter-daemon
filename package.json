@@ -1,50 +1,23 @@
 {
-  // -------------------------------------------------------------------------
-  // Package identity
-  // -------------------------------------------------------------------------
-  // Name must be unique in npm; prefix with "homebridge-" for plugin discovery.
   "name": "homebridge-aladdin-matter-daemon",
-
-  // Display name shown in Homebridge UI and npm listings.
-  "displayName": "Homebridge Aladdin Matter Daemon",
-
-  // Semantic versioning; beta tag indicates early release.
   "version": "1.0.0-beta.3",
-
-  // Short summary shown in npm search and GitHub metadata.
+  "displayName": "Homebridge Aladdin Matter Daemon",
   "description": "Expose Genie Aladdin Connect garage doors as Matter-compatible devices for Homebridge.",
-
-  // License identifier (SPDX-compliant).
+  "author": "Chris Canalia",
   "license": "MIT",
 
-  // -------------------------------------------------------------------------
-  // Entrypoints
-  // -------------------------------------------------------------------------
-  // Main file for Node/Homebridge runtime.
   "main": "index.js",
 
-  // Common script shortcuts for development and post-installation.
   "scripts": {
-    // Starts the Matter.js daemon directly (standalone mode).
     "start": "node src/main.js",
-
-    // Ensures `start-matter.sh` is executable after install.
     "postinstall": "node scripts/postinstall.js"
   },
 
-  // -------------------------------------------------------------------------
-  // Runtime requirements
-  // -------------------------------------------------------------------------
-  // Enforce Node and Homebridge versions to prevent incompatibility.
   "engines": {
     "node": ">=20.0.0",
     "homebridge": ">=1.6.0"
   },
 
-  // -------------------------------------------------------------------------
-  // Discovery and search keywords
-  // -------------------------------------------------------------------------
-  // Helps Homebridge UI and npm users find the plugin.
   "keywords": [
     "homebridge-plugin",
     "homebridge",
@@ -54,27 +27,19 @@
     "garage-door"
   ],
 
-  // -------------------------------------------------------------------------
-  // Repository information
-  // -------------------------------------------------------------------------
-  // Links GitHub metadata for version control and npm publishing.
   "repository": {
     "type": "git",
     "url": "https://github.com/ccanalia82/aladdin-matter-daemon.git"
   },
 
-  // -------------------------------------------------------------------------
-  // Dependencies
-  // -------------------------------------------------------------------------
-  // Matter.js core libraries used to implement the daemon and server.
+  "bugs": {
+    "url": "https://github.com/ccanalia82/aladdin-matter-daemon/issues"
+  },
+
+  "homepage": "https://github.com/ccanalia82/aladdin-matter-daemon#readme",
+
   "dependencies": {
     "@matter/main": "^0.15.6",
     "@matter/nodejs": "^0.15.6"
-  },
-
-  // -------------------------------------------------------------------------
-  // Author / Maintainer
-  // -------------------------------------------------------------------------
-  // Primary developer attribution (appears in npm and Homebridge UI).
-  "author": "Chris Canalia"
+  }
 }
