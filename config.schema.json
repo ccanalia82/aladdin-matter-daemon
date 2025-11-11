@@ -1,0 +1,13 @@
+{
+  "pluginAlias": "AladdinMatterDaemon",
+  "pluginType": "platform",
+  "schema": {
+    "fields": [
+      { "name": "name", "type": "string", "title": "Device Name" },
+      { "name": "username", "type": "string", "title": "Genie Email" },
+      { "name": "password", "type": "string", "title": "Genie Password" },
+      { "name": "doorStatusPollInterval", "type": "integer", "title": "Poll Interval (ms)", "default": 15000 },
+      { "name": "debug", "type": "boolean", "title": "Enable Debug Logging", "default": false }
+    ]
+  }
+}
