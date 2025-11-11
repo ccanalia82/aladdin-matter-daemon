@@ -1,29 +1,45 @@
 /**
  * postinstall.js
  *
- * This script runs automatically after `npm install` completes.
- * Its purpose is to ensure that `start-matter.sh` (the startup script)
- * has the correct execute permissions (chmod 755) on macOS/Linux.
+ * Runs automatically after `npm install` completes.
+ * Ensures `start-matter.sh` is executable (chmod 755) on macOS/Linux.
  *
- * On Windows, this will fail silently since chmod has no effect there.
- * That’s OK — the script will still print a warning but not block installation.
+ * On Windows, this step is skipped automatically, since chmod
+ * has no effect there. The script will still log a message and exit cleanly.
  */
 
 const fs = require("fs");
 const path = require("path");
 
-// Resolve the absolute path to the start-matter.sh script
+// -----------------------------------------------------------------------------
+// Resolve the absolute path to the startup script
+// -----------------------------------------------------------------------------
 const file = path.resolve(__dirname, "../start-matter.sh");
 
-try {
-  // chmodSync sets the file permissions to 755 (-rwxr-xr-x)
-  // meaning: Owner can read/write/execute; others can read/execute
-  fs.chmodSync(file, 0o755);
+// -----------------------------------------------------------------------------
+// Skip chmod on Windows (no executable permissions system there)
+// -----------------------------------------------------------------------------
+if (process.platform === "win32") {
+  console.log("[postinstall] Detected Windows OS — skipping chmod step.");
+  process.exit(0);
+}
 
-  // Log confirmation so the user knows it succeeded
+// -----------------------------------------------------------------------------
+// Verify that the file exists before attempting chmod
+// -----------------------------------------------------------------------------
+if (!fs.existsSync(file)) {
+  console.warn("[postinstall] Warning: start-matter.sh not found. Skipping chmod.");
+  process.exit(0);
+}
+
+// -----------------------------------------------------------------------------
+// Attempt to set executable permissions (755 = -rwxr-xr-x)
+// -----------------------------------------------------------------------------
+try {
+  fs.chmodSync(file, 0o755);
   console.log("[postinstall] Ensured start-matter.sh is executable (755).");
 } catch (err) {
-  // This usually happens on Windows or restricted environments.
-  // We catch it to avoid breaking npm install.
+  // Catch permission or filesystem errors (e.g., read-only directory)
   console.warn("[postinstall] Could not chmod start-matter.sh:", err.message);
+  process.exit(0);
 }
