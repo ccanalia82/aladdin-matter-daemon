@@ -1,20 +1,52 @@
 {
+  // Display name for this garage door device
   "name": "Garage Door",
+
+  // Genie Aladdin Connect login credentials
   "username": "your-email@example.com",
   "password": "your-password",
+
+  // Battery warning threshold (%)
+  // A log warning appears if battery falls below this level.
   "batteryLowLevel": 15,
+
+  // How often (in milliseconds) to poll Genie for updated door state
+  // 15000 ms = 15 seconds
   "doorStatusPollInterval": 15000,
+
+  // Debug settings for Genie API
+  // Set to true to log every API response for troubleshooting.
   "logApiResponses": false,
+
+  // Whether to log every door state check, even if unchanged
   "logDoorStateChanges": true,
+
+  // Reserved for future use (shared doors via Genie account)
   "showShared": false,
+
+  // Homebridge plugin type (required by Homebridge UI)
   "platform": "GenieAladdinConnect",
+
+  // Local bridge and Matter configuration block
   "_bridge": {
+    // HomeKit / Matter unique bridge identifier (do not duplicate)
     "username": "0E:39:6E:4E:16:E1",
+
+    // Local HTTP or UDP port for bridge communication
     "port": 45762,
+
+    // Metadata shown in HomeKit / Matter controllers
     "name": "Garage Door Bridge",
     "manufacturer": "Aladdin",
     "model": "Genie",
+
+    // Enables verbose Matter bridge logs (true = more detail)
     "debugModeEnabled": true,
-    "matter": { "port": 5531 }
+
+    // Matter-specific configuration
+    "matter": {
+      // UDP port for Matter communication (5580–5590 typical)
+      "port": 5531
+    }
   }
 }
