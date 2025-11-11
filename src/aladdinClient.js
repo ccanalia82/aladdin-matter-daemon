@@ -6,6 +6,9 @@
 
 const { callGenie } = require("./genieApi");
 
+/**
+ * Class-based client (nice for custom scripts, not required for Matter glue)
+ */
 class AladdinClient {
   /**
    * Create a new AladdinClient
@@ -15,6 +18,7 @@ class AladdinClient {
    * @param {number} [config.deviceNumber=0] - Device index
    * @param {number} [config.garageNumber=1] - Garage door index
    * @param {boolean} [config.debug=false] - Enable verbose logging
+   * @param {string} [config.logPrefix="AladdinClient"] - Log prefix
    */
   constructor(config) {
     this.username = config.username;
@@ -22,63 +26,90 @@ class AladdinClient {
     this.deviceNumber = config.deviceNumber || 0;
     this.garageNumber = config.garageNumber || 1;
     this.debug = config.debug || false;
+    this.logPrefix = config.logPrefix || "AladdinClient";
   }
 
   /**
-   * Perform an action (open, close, status) against the Genie API
-   * @param {string} action - "open" | "close" | "status"
-   * @param {Function} [callback] - Optional callback(err, result)
-   * @returns {Promise<Object>} Response data
+   * Internal helper to call Genie API via genieApi.js
    */
-  async performAction(action, callback) {
+  async performAction(action) {
     if (this.debug) {
-      console.log(`[AladdinClient] Performing action "${action}"...`);
+      console.log(
+        `[${this.logPrefix}] Performing action "${action}" (device=${this.deviceNumber}, garage=${this.garageNumber})`
+      );
     }
 
-    try {
-      const result = await callGenie({
-        username: this.username,
-        password: this.password,
-        action,
-        deviceNumber: this.deviceNumber,
-        garageNumber: this.garageNumber,
-        debug: this.debug,
-      });
+    const result = await callGenie({
+      username: this.username,
+      password: this.password,
+      action,
+      deviceNumber: this.deviceNumber,
+      garageNumber: this.garageNumber,
+      debug: this.debug,
+      logPrefix: this.logPrefix,
+    });
 
-      if (this.debug) {
-        console.log(`[AladdinClient] Action "${action}" result:`, result);
-      }
-
-      if (callback && typeof callback === "function") {
-        callback(null, result);
-      }
-
-      return result;
-    } catch (error) {
-      console.error(`[AladdinClient] Error performing "${action}":`, error);
-
-      if (callback && typeof callback === "function") {
-        callback(error);
-      }
-
-      throw error;
+    if (this.debug) {
+      console.log(`[${this.logPrefix}] Action "${action}" result:`, result);
     }
+
+    return result;
   }
 
-  /**
-   * Convenience methods
-   */
-  async getStatus(callback) {
-    return this.performAction("status", callback);
+  async getStatus() {
+    return this.performAction("status");
   }
 
-  async openDoor(callback) {
-    return this.performAction("open", callback);
+  async openDoor() {
+    return this.performAction("open");
   }
 
-  async closeDoor(callback) {
-    return this.performAction("close", callback);
+  async closeDoor() {
+    return this.performAction("close");
+  }
+
+  async getBattery() {
+    return this.performAction("battery");
   }
 }
 
-module.exports = AladdinClient;
+/**
+ * Functional helpers used by src/main.js
+ * Each one takes an options object:
+ * {
+ *   username,
+ *   password,
+ *   deviceNumber,
+ *   garageNumber,
+ *   debug,
+ *   logPrefix
+ * }
+ */
+
+async function getDoorStatus(options) {
+  const client = new AladdinClient(options);
+  return client.getStatus();
+}
+
+async function openDoor(options) {
+  const client = new AladdinClient(options);
+  return client.openDoor();
+}
+
+async function closeDoor(options) {
+  const client = new AladdinClient(options);
+  return client.closeDoor();
+}
+
+async function getBattery(options) {
+  const client = new AladdinClient(options);
+  return client.getBattery();
+}
+
+module.exports = {
+  AladdinClient,
+  getDoorStatus,
+  openDoor,
+  closeDoor,
+  getBattery,
+};
