@@ -1,10 +1,13 @@
+// src/genieApi.js
+// Low-level HTTP client for the Genie Aladdin Connect cloud.
+// This replaces node-aladdin-connect-garage-door with a modern
+// fetch()-based implementation and a much smaller dependency surface.
+
+const BASE_URL = "https://geniecompany.com/api"; // TODO: adjust to actual Genie API base if needed
+
 /**
- * genieApi.js
- * Local replacement for node-aladdin-connect-garage-door using native fetch()
+ * Log in to Genie and return an access token.
  */
-
-const BASE_URL = "https://geniecompany.com/api"; // TODO: adjust based on actual Genie API
-
 async function login(username, password, debug = false, logPrefix = "GenieAPI") {
   const url = `${BASE_URL}/v1/login`;
 
@@ -40,7 +43,8 @@ async function login(username, password, debug = false, logPrefix = "GenieAPI") 
 }
 
 /**
- * Perform a Genie action (status, battery, open, close)
+ * Perform a Genie action (status, battery, open, close).
+ * Returns the parsed JSON response (or {} on empty body).
  */
 async function callGenie({
   username,
