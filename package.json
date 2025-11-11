@@ -19,7 +19,7 @@
     "type": "git",
     "url": "https://github.com/ccanalia82/aladdin-matter-daemon.git"
   },
-    "dependencies": {
+  "dependencies": {
     "@matter/main": "^0.15.6",
     "@matter/nodejs": "^0.15.6"
   }
