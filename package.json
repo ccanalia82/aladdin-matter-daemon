@@ -5,8 +5,8 @@
   "private": true,
   "main": "src/main.js",
   "scripts": {
-    "start": "node src/main.js",
-    "start:debug": "NODE_ENV=development DEBUG=aladdin-matter-daemon* node src/main.js"
+    "start": "bash ./start-matter.sh",
+    "start:debug": "NODE_ENV=development DEBUG=aladdin-matter-daemon* bash ./start-matter.sh"
   },
   "author": "Chris Canalia",
   "license": "MIT",
