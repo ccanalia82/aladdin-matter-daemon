@@ -2,7 +2,7 @@
   "name": "homebridge-aladdin-matter-daemon",
   "displayName": "Homebridge Aladdin Matter Daemon",
   "version": "1.0.0-beta.3",
-  "description": "Exposes Genie Aladdin Connect garage doors as Matter-compatible devices for Homebridge.",
+  "description": "Expose Genie Aladdin Connect garage doors as Matter-compatible devices for Homebridge.",
   "license": "MIT",
   "main": "src/main.js",
   "scripts": {
