@@ -22,6 +22,6 @@
   "dependencies": {
     "@matter/main": "^0.15.6",
     "@matter/nodejs": "^0.15.6",
-    "node-aladdin-connect-garage-door": "^0.2.0"
+    "node-aladdin-connect-garage-door": "^0.1.2"
   }
 }
