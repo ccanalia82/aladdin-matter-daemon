@@ -7,7 +7,7 @@
   "scripts": {
     "start": "bash ./start-matter.sh",
     "start:debug": "NODE_ENV=development DEBUG=aladdin-matter-daemon* bash ./start-matter.sh",
-    "postinstall": "chmod +x ./start-matter.sh"
+    "postinstall": "node scripts/postinstall.js"
   },
   "author": "Chris Canalia",
   "license": "MIT",
