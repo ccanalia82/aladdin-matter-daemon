@@ -1,9 +1,10 @@
-const AladdinClient = require("./src/aladdinClient");
+const { AladdinClient } = require("./aladdinClient");
 
 const client = new AladdinClient({
   username: process.env.GENIE_USER,
   password: process.env.GENIE_PASS,
   debug: true,
+  logPrefix: "TestClient",
 });
 
 (async () => {
