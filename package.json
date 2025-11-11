@@ -4,7 +4,7 @@
   "version": "1.0.0-beta.3",
   "description": "Expose Genie Aladdin Connect garage doors as Matter-compatible devices for Homebridge.",
   "license": "MIT",
-  "main": "src/main.js",
+  "main": "index.js",
   "scripts": {
     "start": "node src/main.js",
     "postinstall": "node scripts/postinstall.js"
