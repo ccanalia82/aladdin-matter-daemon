@@ -19,42 +19,33 @@ pids
 
 # OS files
 .DS_Store
-.DS_Store?
 Thumbs.db
 
-# Environment files
+# Env files
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*.local
 
-# Config or secrets (never commit credentials)
-config.local.json
-credentials.json
-
-# Optional build outputs
-dist/
-build/
-tmp/
-.cache/
-
-# Editor files
+# VSCode
 .vscode/
+
+# JetBrains
 .idea/
-*.swp
 
-# macOS system files
-.AppleDouble
-.LSOverride
-Icon?
-__MACOSX/
-
-# Matter / storage caches
-*.fabric.json
-*.commissioning.json
-*.storage.json
-
-# Test coverage (optional)
+# Coverage
 coverage/
 .nyc_output/
+
+# Build output
+dist/
+build/
+
+# Temporary
+tmp/
+temp/
+*.tmp
+
+# Misc
+*.swp
+*.swo
+*~
