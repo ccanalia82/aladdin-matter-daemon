@@ -3,11 +3,27 @@
   "pluginType": "platform",
   "schema": {
     "fields": [
-      { "name": "name", "type": "string", "title": "Device Name" },
-      { "name": "username", "type": "string", "title": "Genie Email" },
-      { "name": "password", "type": "string", "title": "Genie Password" },
-      { "name": "doorStatusPollInterval", "type": "integer", "title": "Poll Interval (ms)", "default": 15000 },
-      { "name": "debug", "type": "boolean", "title": "Enable Debug Logging", "default": false }
+      { "name": "name", "title": "Device Name", "type": "string" },
+      { "name": "username", "title": "Genie Email", "type": "string" },
+      { "name": "password", "title": "Genie Password", "type": "string" },
+      {
+        "name": "doorStatusPollInterval",
+        "title": "Door Status Poll Interval (ms)",
+        "type": "integer",
+        "default": 15000
+      },
+      {
+        "name": "batteryLowLevel",
+        "title": "Battery Low Threshold (%)",
+        "type": "integer",
+        "default": 15
+      },
+      {
+        "name": "debug",
+        "title": "Enable Debug Logging",
+        "type": "boolean",
+        "default": false
+      }
     ]
   }
 }
