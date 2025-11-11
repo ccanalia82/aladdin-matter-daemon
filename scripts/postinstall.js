@@ -5,6 +5,11 @@
 const fs = require("fs");
 const path = require("path");
 
+const file = path.resolve(__dirname, "../start-matter.sh");
+fs.chmodSync(file, 0o755);
+console.log("[postinstall] Ensured start-matter.sh is executable (755).");
+
+
 const scriptPath = path.join(__dirname, "..", "start-matter.sh");
 
 fs.stat(scriptPath, (err, stats) => {
