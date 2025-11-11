@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# Resolve the project directory (where this script lives)
+# Resolve project directory
 PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-# Switch to /opt/homebrew as you requested
+# Ensure correct homebrew path on macOS
 cd /opt/homebrew
 
-# Run the Matter daemon using the project path
+# Start the Matter daemon
 node "$PROJECT_DIR/src/main.js"
