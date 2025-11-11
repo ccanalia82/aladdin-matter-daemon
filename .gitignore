@@ -54,3 +54,7 @@ __MACOSX/
 *.fabric.json
 *.commissioning.json
 *.storage.json
+
+# Test coverage (optional)
+coverage/
+.nyc_output/
