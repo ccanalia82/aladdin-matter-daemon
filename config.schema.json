@@ -1,23 +1,51 @@
 {
+  // The unique alias registered with Homebridge in index.js
   "pluginAlias": "AladdinMatterDaemon",
+
+  // Type of plugin: "platform" (used for multi-accessory daemons)
   "pluginType": "platform",
+
+  // Schema definition for Homebridge UI configuration
   "schema": {
     "fields": [
-      { "name": "name", "title": "Device Name", "type": "string" },
-      { "name": "username", "title": "Genie Email", "type": "string" },
-      { "name": "password", "title": "Genie Password", "type": "string" },
+      // Display name of the Genie garage door
+      {
+        "name": "name",
+        "title": "Device Name",
+        "type": "string"
+      },
+
+      // Genie account email for authentication
+      {
+        "name": "username",
+        "title": "Genie Email",
+        "type": "string"
+      },
+
+      // Genie account password for authentication
+      {
+        "name": "password",
+        "title": "Genie Password",
+        "type": "string"
+      },
+
+      // Polling interval for status updates from Genie (ms)
       {
         "name": "doorStatusPollInterval",
         "title": "Door Status Poll Interval (ms)",
         "type": "integer",
         "default": 15000
       },
+
+      // Battery level threshold for low-battery warnings (%)
       {
         "name": "batteryLowLevel",
         "title": "Battery Low Threshold (%)",
         "type": "integer",
         "default": 15
       },
+
+      // Enable or disable verbose debug logs in the plugin
       {
         "name": "debug",
         "title": "Enable Debug Logging",
