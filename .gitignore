@@ -16,12 +16,12 @@ pids
 *.pid
 *.pid.lock
 
-# Environment
+# Environment files
 .env
 .env.local
 .env.*.local
 
-# OS / editor files
+# OS / editor noise
 .DS_Store
 Thumbs.db
 .vscode/
@@ -30,7 +30,7 @@ Thumbs.db
 *.swo
 *~
 
-# Build / dist
+# Build / dist / temp
 dist/
 build/
 tmp/
@@ -48,6 +48,6 @@ __MACOSX/
 *.commissioning.json
 *.storage.json
 
-# Test coverage (optional)
+# Coverage (optional)
 coverage/
 .nyc_output/
