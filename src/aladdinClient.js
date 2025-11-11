@@ -22,7 +22,7 @@ class AladdinClient {
       deviceNumber: this.deviceNumber,
       garageNumber: this.garageNumber,
       debug: this.debug,
-      logPrefix: this.logPrefix
+      logPrefix: this.logPrefix,
     });
 
     if (this.debug) {
@@ -74,5 +74,5 @@ module.exports = {
   getDoorStatus,
   openDoor,
   closeDoor,
-  getBattery
+  getBattery,
 };
