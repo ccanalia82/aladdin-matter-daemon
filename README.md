@@ -1,36 +1,43 @@
-# Homebridge Aladdin Matter Daemon
+# 🏠 Homebridge Aladdin Matter Daemon
 
-Expose your Genie Aladdin Connect garage door as a Matter-compatible device for Apple Home, Google Home, or Alexa — directly through Homebridge or as a standalone Node daemon.
+Expose your **Genie Aladdin Connect garage door** as a **Matter-compatible device** for Apple Home, Google Home, or Alexa — either through **Homebridge** or as a **standalone Node.js daemon**.
 
-This repo contains:
+---
 
-- A standalone **Matter.js daemon** (`src/main.js`)
-- A thin **Homebridge platform shim** (`index.js`)
-- A small **Genie HTTP client** (`src/genieApi.js`, `src/aladdinClient.js`)
+## 📦 Project Overview
+
+This repository provides three main components:
+
+- 🧠 **Matter.js Daemon** (`src/main.js`) — runs a local Matter server for Genie doors.  
+- 🔌 **Homebridge Platform Shim** (`index.js`) — allows Homebridge to manage the daemon as a plugin.  
+- 🌐 **Genie HTTP Client** (`src/genieApi.js` / `src/aladdinClient.js`) — provides a modern, `fetch()`-based API wrapper.
+
+It replaces legacy implementations that depend on deprecated modules like `request` or `request-promise-native`, and instead uses `@matter/main` and `@matter/nodejs` for a clean, modern Matter integration.
 
 ---
 
 ## ✨ Features
 
-- Uses Matter.js (`@matter/main` / `@matter/nodejs`)
-- Works on macOS, Linux, and Windows
-- Uses a modern `fetch()`-based Genie API client (no deprecated libraries)
-- Replaces `node-aladdin-connect-garage-door`
-- Reads config from `config.genie.json` (plus optional env vars)
+✅ Uses **Matter.js** (`@matter/main` / `@matter/nodejs`)  
+✅ Cross-platform: **macOS**, **Linux**, and **Windows**  
+✅ Secure, token-based Genie login via modern **`fetch()` API**  
+✅ No cloud storage — all credentials stay in memory  
+✅ Backward-compatible with **Homebridge UI**  
+✅ Reads configuration from `config.genie.json` or **environment variables**
 
 ---
 
 ## ⚙️ Installation
 
-### From GitHub (recommended for Homebridge UI)
+### 🧩 Via Homebridge UI (Recommended)
 
-Paste this into the **Plugins → Install** box in Homebridge UI:
+In the **Homebridge UI → Plugins → Install** field, paste the repository URL:
 
 ```text
 https://github.com/ccanalia82/aladdin-matter-daemon
 ```
 
-### From Terminal
+### 💻 Manual Installation (CLI)
 
 ```bash
 git clone https://github.com/ccanalia82/aladdin-matter-daemon.git
@@ -38,9 +45,13 @@ cd aladdin-matter-daemon
 npm install
 ```
 
+This installs all dependencies and prepares `start-matter.sh` to be executable.
+
 ---
 
 ## 🧰 Configuration (`config.genie.json`)
+
+Example configuration file:
 
 ```json
 {
@@ -64,54 +75,76 @@ npm install
 }
 ```
 
-You can also set environment variables:
+You can also define your Genie credentials as environment variables (these override the file):
 
 ```bash
 export GENIE_USER="your-email@example.com"
 export GENIE_PASS="your-password"
 ```
 
-These override the `username` / `password` in `config.genie.json`.
-
 ---
 
-## ▶️ Running (standalone)
+## ▶️ Running (Standalone Daemon)
 
 ```bash
 npm start
 ```
 
-This executes `src/main.js` via Node. You should see logs like:
+This executes `src/main.js` and launches the Matter server.  
+Expected console output:
 
 ```text
 Using Node at: /opt/homebrew/bin/node
-[Aladdin-Matter] Starting daemon…
-[Aladdin-Matter] Server started on port 5580.
-[Aladdin-Matter] Door status: CLOSED → CLOSED
+[Matter] Server started on port 5580.
+[Genie] Door status: CLOSED → CLOSED
 ```
 
----
-
-## ▶️ Running via Homebridge
-
-When installed as a Homebridge plugin:
-
-- `index.js` registers the **AladdinMatterDaemon** platform.
-- On `didFinishLaunching`, it calls `createServer()` from `src/main.js`.
-- The Matter device then appears to your controller and exposes the garage door.
-
-Configuration in the Homebridge UI is defined by `config.schema.json`.
+Once started, the daemon broadcasts the garage door as a **Matter On/Off device** discoverable by your controller.
 
 ---
 
-## 🔒 Security
+## 🏡 Running via Homebridge
 
-- No deprecated HTTP libraries (`request`, `request-promise-native`, etc.)
-- No cloud tokens are persisted to disk.
-- Genie credentials are read from config / env and held only in process memory.
+When installed through Homebridge:
+
+- `index.js` registers the **AladdinMatterDaemon** platform.  
+- On Homebridge’s `didFinishLaunching` event, it triggers `createServer()` from `src/main.js`.  
+- The daemon starts automatically, and the garage door appears in your Home app.
+
+Configuration fields in the Homebridge UI come from `config.schema.json`.
+
+---
+
+## 🧪 Testing Connectivity
+
+You can validate Genie credentials independently using:
+
+```bash
+node src/testClient.js
+```
+
+This authenticates with Genie and logs the current garage door status to verify network and API access.
+
+---
+
+## 🔒 Security Notes
+
+- ✅ No deprecated or insecure libraries (`request`, `request-promise-native`, etc.).  
+- ✅ Credentials are **never written to disk** — they exist only in process memory.  
+- ✅ Safe to store in Homebridge environments using environment variables.
 
 ---
 
 ## 🧾 License
 
-MIT © 2025 Chris Canalia
+**MIT License**  
+Copyright © 2025  
+**Author:** [Chris Canalia](https://github.com/ccanalia82)
+
+---
+
+## 💡 Developer Notes
+
+This plugin was built to help bridge the gap between **Genie Aladdin Connect**’s cloud-based API and **local Matter ecosystems**, enabling privacy-preserving control of your garage door within Apple Home, Google Home, or Alexa without third-party dependencies.
+
+Contributions, bug reports, and forks are welcome. Please open issues or pull requests if you encounter API or Matter interoperability issues.
