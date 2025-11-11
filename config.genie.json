@@ -1,27 +1,20 @@
 {
   "name": "Garage Door",
+  "username": "your-email@example.com",
+  "password": "your-password",
   "batteryLowLevel": 15,
-  "doorStatusStationaryCacheTtl": 15,
-  "doorStatusTransitioningCacheTtl": 5,
   "doorStatusPollInterval": 15000,
   "logApiResponses": false,
   "logDoorStateChanges": true,
   "showShared": false,
-
-  "doors": [
-    {
-      "name": "Main Garage Door",
-      "deviceNumber": 0,
-      "garageNumber": 1
-    }
-  ],
-
-  "matter": {
-    "nodeId": "aladdin-garage-node",
-    "port": 5580,
-    "passcode": 20202021,
-    "discriminator": 3840,
-    "vendorId": 65521,
-    "productId": 32769
+  "platform": "GenieAladdinConnect",
+  "_bridge": {
+    "username": "0E:39:6E:4E:16:E1",
+    "port": 45762,
+    "name": "Garage Door Bridge",
+    "manufacturer": "Aladdin",
+    "model": "Genie",
+    "debugModeEnabled": true,
+    "matter": { "port": 5531 }
   }
 }
