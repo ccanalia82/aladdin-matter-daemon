@@ -76,7 +76,9 @@ cd aladdin-matter-daemon
 npm install
 ```
 
-The installation will automatically ensure that `start-matter.sh` is executable on macOS and Linux.  
+During installation, a cross-platform postinstall script ensures `start-matter.sh` is executable on macOS and Linux.  
+On Windows, this step simply logs a harmless message and continues safely.
+
 If you see:
 ```
 [postinstall] Ensured start-matter.sh is executable (755).
@@ -87,21 +89,29 @@ it means the setup script ran successfully.
 
 ## ▶️ Running
 
-Start the daemon:
+Start the daemon on **any platform**:
 
 ```bash
 npm start
 ```
 
+This command launches the daemon directly via Node.js (`node src/main.js`) and works the same on macOS, Linux, and Windows.
+
 Expected output:
 
 ```
-Using Node at: /opt/homebrew/bin/node
-Project directory: /Users/you/aladdin-matter-daemon
 [Aladdin-Matter] Starting Aladdin Matter daemon…
 [Aladdin-Matter] Matter server started on port 5580. Commission using code 20202021.
 [Aladdin-Matter] Door status: CLOSED -> CLOSED
 ```
+
+For detailed debug output (development mode):
+
+```bash
+npm run start:debug
+```
+
+This enables Matter.js debug logs and sets `NODE_ENV=development`.
 
 ---
 
@@ -179,7 +189,7 @@ launchctl start com.ccanalia.aladdin-matter-daemon
 - **Linux (systemd):**  
   `journalctl -u aladdin-matter-daemon -f`
 
-- **Windows (PM2):**  
+- **Windows (PM2 or manual):**  
   `pm2 logs aladdin-matter-daemon`
 
 ---
@@ -194,7 +204,7 @@ cd aladdin-matter-daemon
 npm install
 ```
 
-During installation, a post-install script ensures `start-matter.sh` is executable on macOS and Linux.  
+During installation, a postinstall script ensures `start-matter.sh` is executable on macOS and Linux.  
 On Windows, it logs a message and continues safely.
 
 If you see:
