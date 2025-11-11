@@ -25,7 +25,13 @@ async function callGenie({ username, password, action, deviceNumber = 0, garageN
     default: throw new Error(`[GenieAPI] Invalid action: ${action}`);
   }
   if (debug) console.log(`[GenieAPI] Calling ${method} ${endpoint}`);
-  const res = await fetch(endpoint, { method, headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } });
+  const res = await fetch(endpoint, {
+    method,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    }
+  });
   if (!res.ok) throw new Error(`[GenieAPI] ${action} failed ${res.status}`);
   return await res.json().catch(() => ({}));
 }
