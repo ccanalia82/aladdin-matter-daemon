@@ -1,7 +1,15 @@
 // src/main.js
+//
 // Matter.js server that exposes a single "garage door" as an On/Off device.
 // This can be run directly via `npm start`, or invoked from Homebridge
 // (see index.js) as a platform daemon.
+//
+// High-level flow:
+// 1. Load configuration (Genie credentials, Matter settings, poll intervals).
+// 2. Create a Matter ServerNode and an OnOff device that represents the door.
+// 3. On startup, sync door state from Genie to Matter.
+// 4. Listen for Matter on/off changes and translate them to Genie open/close.
+// 5. Periodically poll Genie for updated status and battery info.
 
 const fs = require("fs");
 const path = require("path");
@@ -19,6 +27,11 @@ const {
 
 // ---------- Config loading ----------
 
+/**
+ * Path to the standalone configuration file for Genie + Matter.
+ * Note: Homebridge config is currently NOT wired directly here; this file
+ * remains the single source of truth for the daemon’s runtime configuration.
+ */
 const configPath = path.join(__dirname, "..", "config.genie.json");
 let cfg;
 
@@ -34,9 +47,11 @@ try {
 }
 
 // Matter-specific config lives under _bridge.matter for now.
+// Example: { "_bridge": { "matter": { "port": 5531, "passcode": 20202021 } } }
 const matterCfg = (cfg._bridge && cfg._bridge.matter) || {};
 
 // If multiple doors are ever supported, cfg.doors[] would be used.
+// For now we fallback to a single logical door derived from cfg.
 const doors =
   (cfg.doors && Array.isArray(cfg.doors) && cfg.doors.length > 0
     ? cfg.doors
@@ -49,6 +64,7 @@ const doors =
       ]);
 
 // Credentials: prefer environment, fall back to file.
+// This makes it easy to override secrets without committing them.
 const GENIE_USER = process.env.GENIE_USER || cfg.username;
 const GENIE_PASS = process.env.GENIE_PASS || cfg.password;
 
@@ -59,6 +75,7 @@ if (!GENIE_USER || !GENIE_PASS) {
   process.exit(1);
 }
 
+// Poll intervals and thresholds.
 const STATUS_POLL_MS = cfg.doorStatusPollInterval || 15000;
 const BATTERY_LOW_LEVEL =
   typeof cfg.batteryLowLevel === "number" ? cfg.batteryLowLevel : 15;
@@ -67,6 +84,12 @@ const BATTERY_LOW_LEVEL =
 
 /**
  * Normalize a variety of Genie status responses into a boolean "open" flag.
+ *
+ * Genie’s response objects/fields may evolve, so we defensively check
+ * multiple property names and types here.
+ *
+ * @param {any} status - Raw status object or value from Genie API.
+ * @returns {boolean} true if door is considered OPEN, false if CLOSED.
  */
 function normalizeDoorOpen(status) {
   if (!status) return false;
@@ -93,6 +116,14 @@ function normalizeDoorOpen(status) {
 
 // ---------- Matter / Genie glue ----------
 
+/**
+ * Perform a one-time sync of door state from Genie into the Matter device.
+ * Called on startup so the Matter server starts with an accurate representation
+ * of the real-world door position.
+ *
+ * @param {OnOffLightDevice} device - Matter device representing the door.
+ * @param {Object} doorCfg - Selected door configuration object.
+ */
 async function syncDoorFromGenie(device, doorCfg) {
   try {
     const status = await getDoorStatus({
@@ -118,6 +149,13 @@ async function syncDoorFromGenie(device, doorCfg) {
 
 /**
  * Handle Matter on/off commands and translate them to Genie open/close calls.
+ *
+ * Matter semantics:
+ *   onOff = true  -> treat as "door should be OPEN"
+ *   onOff = false -> treat as "door should be CLOSED"
+ *
+ * @param {boolean} targetOpen - Desired end state from Matter (true=open)
+ * @param {Object} doorCfg - Door configuration record
  */
 async function actuateDoorFromMatter(targetOpen, doorCfg) {
   try {
@@ -149,6 +187,12 @@ async function actuateDoorFromMatter(targetOpen, doorCfg) {
 
 /**
  * Periodically poll Genie for door state and reflect it into Matter.
+ *
+ * This keeps the Matter controller updated if the door moves due to
+ * physical remotes, wall buttons, or the Genie app.
+ *
+ * @param {OnOffLightDevice} device
+ * @param {Object} doorCfg
  */
 async function pollDoor(device, doorCfg) {
   try {
@@ -184,6 +228,8 @@ async function pollDoor(device, doorCfg) {
 
 /**
  * Poll battery once per hour and log low-battery warnings.
+ *
+ * @param {Object} doorCfg
  */
 async function batteryPoll(doorCfg) {
   try {
@@ -222,6 +268,16 @@ async function batteryPoll(doorCfg) {
 
 // ---------- Matter server startup ----------
 
+/**
+ * Create and start the Matter.js ServerNode for the Genie garage door.
+ *
+ * This does all the wiring:
+ * - Sets up the root endpoint and a single OnOffLightDevice for the door.
+ * - Hooks up Genie sync, polling, and command translation.
+ * - Starts the Matter stack listening on the configured UDP port.
+ *
+ * @returns {Promise<ServerNode>} The started Matter server instance.
+ */
 async function createServer() {
   const doorCfg = doors[0];
 
@@ -271,7 +327,7 @@ async function createServer() {
   doorEndpoint.add(doorDevice);
   rootEndpoint.addChild(doorEndpoint);
 
-  // Helpful dump of the endpoint tree.
+  // Helpful dump of the endpoint tree for debugging / introspection.
   logEndpoint(server);
 
   // Initial sync from Genie before we start advertising.
@@ -319,8 +375,8 @@ async function createServer() {
 
 // ---------- CLI entrypoint ----------
 
+// If invoked directly (`node src/main.js`), start the server.
 if (require.main === module) {
-  // If invoked directly (`node src/main.js`), start the server.
   createServer().catch((err) => {
     console.error("Fatal error starting daemon:", err);
     process.exit(1);
