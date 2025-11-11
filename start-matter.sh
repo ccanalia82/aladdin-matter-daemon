@@ -1,30 +1,22 @@
-#!/usr/bin/env bash
+#!/bin/bash
+# start-matter.sh
 
-set -euo pipefail
+set -e
 
-# Resolve the project directory (where this script lives)
-PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
-
-# Prefer Homebrew node on macOS if present
-HOMEBREW_NODE="/opt/homebrew/bin/node"
-
-if [ -x "$HOMEBREW_NODE" ]; then
-  NODE_BIN="$HOMEBREW_NODE"
+# Detect Node binary
+if command -v /opt/homebrew/bin/node >/dev/null 2>&1; then
+  NODE_BIN="/opt/homebrew/bin/node"
 else
-  # Fallback to whatever "node" is on PATH
-  NODE_BIN="$(command -v node || true)"
+  NODE_BIN="$(command -v node)"
 fi
 
-if [ -z "${NODE_BIN:-}" ]; then
-  echo "Error: Node.js not found on PATH or at /opt/homebrew/bin/node" >&2
+if [ -z "$NODE_BIN" ]; then
+  echo "Error: Node.js not found. Please install Node 20+."
   exit 1
 fi
 
 echo "Using Node at: $NODE_BIN"
-echo "Project directory: $PROJECT_DIR"
+PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$PROJECT_DIR"
 
-# Optional: set production environment by default
-export NODE_ENV="${NODE_ENV:-production}"
-
-# Exec replaces the shell with node, so signals (SIGINT, SIGTERM) propagate correctly
-exec "$NODE_BIN" "$PROJECT_DIR/src/main.js"
+exec "$NODE_BIN" src/main.js
