@@ -14,38 +14,40 @@ logs
 # Runtime data
 pids
 *.pid
-*.seed
 *.pid.lock
 
-# OS files
-.DS_Store
-Thumbs.db
-
-# Env files
+# Environment
 .env
 .env.local
 .env.*.local
 
-# VSCode
+# OS / editor files
+.DS_Store
+Thumbs.db
 .vscode/
-
-# JetBrains
 .idea/
-
-# Coverage
-coverage/
-.nyc_output/
-
-# Build output
-dist/
-build/
-
-# Temporary
-tmp/
-temp/
-*.tmp
-
-# Misc
 *.swp
 *.swo
 *~
+
+# Build / dist
+dist/
+build/
+tmp/
+temp/
+.cache/
+
+# macOS system files
+.AppleDouble
+.LSOverride
+Icon?
+__MACOSX/
+
+# Matter / storage caches
+*.fabric.json
+*.commissioning.json
+*.storage.json
+
+# Test coverage (optional)
+coverage/
+.nyc_output/
