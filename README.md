@@ -7,19 +7,18 @@
 [![GitHub issues](https://img.shields.io/github/issues/ccanalia82/aladdin-matter-daemon.svg)](https://github.com/ccanalia82/aladdin-matter-daemon/issues)
 [![GitHub last commit](https://img.shields.io/github/last-commit/ccanalia82/aladdin-matter-daemon.svg)](https://github.com/ccanalia82/aladdin-matter-daemon/commits/main)
 
-Matter-based daemon for Genie Aladdin Connect garage doors.
+A lightweight Matter.js-based daemon for **Genie Aladdin Connect** garage doors, exposing them as native **Matter devices** for Apple Home, Google Home, and Alexa.
 
 ---
 
-## Matter Platform Daemon
+## 📘 Overview
 
-**Aladdin Matter Daemon** is a standalone [Matter](https://csa-iot.org/all-solutions/matter/) bridge for [Genie Aladdin Connect](https://www.geniecompany.com/aladdinconnect) garage door openers.
-
-It allows your Genie doors to appear as native Matter accessories in Apple Home, Google Home, Alexa, or any other Matter controller.
+The **Aladdin Matter Daemon** connects to the Genie Aladdin Connect cloud and publishes your garage door as a Matter accessory.  
+It allows local-network control of your door from any Matter-compatible controller — no Homebridge required.
 
 ---
 
-## Configuration
+## ⚙️ Configuration
 
 Example configuration (`config.genie.json`):
 
@@ -51,7 +50,7 @@ Example configuration (`config.genie.json`):
 }
 ```
 
-### Environment Variables
+### 🔐 Environment Variables
 
 Before starting, export your Genie Aladdin Connect credentials:
 
@@ -69,7 +68,7 @@ $env:GENIE_PASS="your-password"
 
 ---
 
-## Installation
+## 🧩 Installation
 
 ```bash
 git clone https://github.com/ccanalia82/aladdin-matter-daemon.git
@@ -77,39 +76,48 @@ cd aladdin-matter-daemon
 npm install
 ```
 
+The installation will automatically ensure that `start-matter.sh` is executable on macOS and Linux.  
+If you see:
+```
+[postinstall] Ensured start-matter.sh is executable (755).
+```
+it means the setup script ran successfully.
+
 ---
 
-## Running
+## ▶️ Running
 
-To start the daemon manually:
+Start the daemon:
 
 ```bash
 npm start
 ```
 
-Example output:
+Expected output:
 
 ```
-Starting Aladdin Matter daemon
-Matter server started on port 5580. Commission using code 20202021.
-[Genie] Door status: CLOSED -> CLOSED
+Using Node at: /opt/homebrew/bin/node
+Project directory: /Users/you/aladdin-matter-daemon
+[Aladdin-Matter] Starting Aladdin Matter daemon…
+[Aladdin-Matter] Matter server started on port 5580. Commission using code 20202021.
+[Aladdin-Matter] Door status: CLOSED -> CLOSED
 ```
 
 ---
 
-## Pairing
+## 🏠 Pairing
 
 1. Open your Matter controller app (Apple Home, Google Home, Alexa, etc.)
 2. Tap **Add Accessory** or **Add Matter Device**
-3. Enter the passcode from your config file (default: `20202021`)
-4. The device will appear as **Garage Door**
+3. Enter the pairing code from your configuration file (default: `20202021`)
+4. The device appears as **Garage Door**
 
 Toggling **On** opens the door.  
 Toggling **Off** closes it.
 
 ---
 
-## Auto Start (macOS Example)
+## 🔁 Auto-Start (macOS Example)
 
 Create a launch agent:
 
@@ -153,7 +161,7 @@ Example:
 </plist>
 ```
 
-Then load:
+Then load it:
 
 ```bash
 launchctl load ~/Library/LaunchAgents/com.ccanalia.aladdin-matter-daemon.plist
@@ -162,7 +170,7 @@ launchctl start com.ccanalia.aladdin-matter-daemon
 
 ---
 
-## Logs
+## 📜 Logs
 
 - **macOS:**  
   `~/Library/Logs/aladdin-matter-daemon.out.log`  
@@ -176,16 +184,106 @@ launchctl start com.ccanalia.aladdin-matter-daemon
 
 ---
 
-## License
+## 🧑‍💻 Building and Contributing
+
+### Clone and install
+
+```bash
+git clone https://github.com/ccanalia82/aladdin-matter-daemon.git
+cd aladdin-matter-daemon
+npm install
+```
+
+During installation, a post-install script ensures `start-matter.sh` is executable on macOS and Linux.  
+On Windows, it logs a message and continues safely.
+
+If you see:
+```
+[postinstall] Ensured start-matter.sh is executable (755).
+```
+you’re ready to go.
+
+---
+
+### Development workflow
+
+Run the daemon directly in development mode:
+
+```bash
+npm run start:debug
+```
+
+This sets `NODE_ENV=development` and enables detailed debug logging for Matter and Genie communication.
+
+For production use:
+```bash
+npm start
+```
+
+---
+
+### Project structure
+
+| Path | Description |
+|------|-------------|
+| `src/main.js` | Main daemon process that starts the Matter server and synchronizes Genie ↔ Matter |
+| `src/aladdinClient.js` | Wrapper for the Genie Aladdin Connect API |
+| `start-matter.sh` | Cross-platform launch script used by npm start |
+| `scripts/postinstall.js` | Ensures `start-matter.sh` is executable across macOS, Linux, and Windows |
+| `config.genie.json` | Daemon configuration (port, passcode, polling, etc.) |
+
+---
+
+### Contributing
+
+1. Fork the repository on GitHub.  
+2. Create a new branch for your feature or fix.  
+3. Make your changes and confirm `npm install` and `npm start` both succeed.  
+4. Submit a pull request with a clear description of your change.
+
+---
+
+### Common commands
+
+| Command | Description |
+|----------|-------------|
+| `npm install` | Installs dependencies and fixes script permissions automatically |
+| `npm start` | Starts the daemon normally |
+| `npm run start:debug` | Runs with debug logs enabled |
+| `npm test` | *(Reserved for future test suite)* |
+
+---
+
+### 🪟 Windows notes
+
+On Windows, the daemon runs correctly in **PowerShell** or **WSL**.  
+The `postinstall` step logs a harmless warning if it cannot set POSIX permissions; this doesn’t affect functionality.
+
+To start manually in PowerShell:
+
+```powershell
+node .\src\main.js
+```
+
+---
+
+## ⚠️ Known Limitations (Beta)
+
+- Only the first door in `config.genie.json` is exposed  
+- Uses generic On/Off device type (not GarageDoor cluster yet)  
+- Genie cloud outages may temporarily desync state  
+- Matter fabric persistence not yet implemented
+
+---
+
+## 📄 License
 
 MIT License © 2025 Chris Canalia
 
 ---
 
-## See Also
+## 🔗 See Also
 
 - [Genie Aladdin Connect](https://www.geniecompany.com/aladdinconnect)
 - [homebridge-aladdin-connect](https://github.com/homebridge-plugins/homebridge-aladdin-connect)
 - [Matter.js on GitHub](https://github.com/project-chip/matter.js)
-
----
