@@ -1,20 +1,26 @@
 {
-  "name": "aladdin-matter-daemon",
-  "version": "1.0.0",
-  "description": "Expose Genie Aladdin Connect garage door as a Matter device using Matter.js",
-  "private": true,
+  "name": "homebridge-aladdin-matter-daemon",
+  "displayName": "Homebridge Aladdin Matter Daemon",
+  "version": "1.0.0-beta.3",
+  "description": "Exposes Genie Aladdin Connect garage doors as Matter-compatible devices for Homebridge.",
+  "license": "MIT",
   "main": "src/main.js",
   "scripts": {
     "start": "node src/main.js",
-    "start:debug": "NODE_ENV=development DEBUG=aladdin-matter-daemon* node src/main.js",
     "postinstall": "node scripts/postinstall.js"
   },
-  "author": "Chris Canalia",
-  "license": "MIT",
-  "type": "commonjs",
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=20.0.0",
+    "homebridge": ">=1.6.0"
   },
+  "keywords": [
+    "homebridge-plugin",
+    "homebridge",
+    "matter",
+    "genie",
+    "aladdin-connect",
+    "garage-door"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/ccanalia82/aladdin-matter-daemon.git"
@@ -22,5 +28,6 @@
   "dependencies": {
     "@matter/main": "^0.15.6",
     "@matter/nodejs": "^0.15.6"
-  }
+  },
+  "author": "Chris Canalia"
 }
